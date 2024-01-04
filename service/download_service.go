@@ -7,6 +7,7 @@ import (
 	"github.com/file-server-go/types"
 	"github.com/google/uuid"
 	"os"
+	"path/filepath"
 )
 
 type DownloadService struct {
@@ -21,7 +22,7 @@ func NewDownloadService(store storage.FileStore, crypto types.Crypto) *DownloadS
 	}
 }
 
-func (s *DownloadService) Execute(ctx context.Context, filename string) (filepath string, err error) {
+func (s *DownloadService) Execute(ctx context.Context, filename string) (path string, err error) {
 	content, err := s.store.Download(ctx, filename)
 
 	if err != nil {
@@ -34,20 +35,30 @@ func (s *DownloadService) Execute(ctx context.Context, filename string) (filepat
 		return "", fmt.Errorf("failed to decrpyt the file: %w", err)
 	}
 
-	// to avoid conflicts from concurrent requests
-	filepath = "downloaded/" + filename + uuid.New().String()
+	return s.saveFile(filename, decrypted)
+}
 
-	file, err := os.Create(filepath)
+func (s *DownloadService) saveFile(filename string, content []byte) (path string, err error) {
+	// to avoid conflicts from concurrent requests
+	path = "downloaded/" + filename + uuid.New().String()
+
+	err = os.MkdirAll(filepath.Dir(path), 0750)
+
+	if err != nil {
+		return "", fmt.Errorf("failed to create the dir: %w", err)
+	}
+
+	file, err := os.Create(path)
 
 	if err != nil {
 		return "", fmt.Errorf("failed to create a file: %w", err)
 	}
 
-	_, err = file.Write(decrypted)
+	_, err = file.Write(content)
 
 	if err != nil {
 		return "", fmt.Errorf("failed to write the downloaded file: %w", err)
 	}
 
-	return filepath, nil
+	return path, nil
 }

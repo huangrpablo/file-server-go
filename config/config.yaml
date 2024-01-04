@@ -4,5 +4,5 @@ minio:
   secretKey: minioadmin
 
 app:
-  chunkSize: 1024
+  chunkSize: 5242880
   bucketName: "taurus-file-store"

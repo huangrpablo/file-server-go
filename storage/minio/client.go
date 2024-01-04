@@ -6,6 +6,9 @@ import (
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
+// no using sync.Once
+// as currently the usage of Init
+// is controlled in the main entrypoint
 var client *minio.Client
 
 func Init(endpoint, accessKey, secretKey string) error {

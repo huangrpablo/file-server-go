@@ -45,7 +45,7 @@ func (h *FileHandler) Upload(c *gin.Context) {
 	}
 
 	filename := params.File.Filename
-	
+
 	// to avoid conflicts from concurrent requests
 	filepath := "uploaded/" + filename + uuid.New().String()
 
@@ -71,6 +71,7 @@ func (h *FileHandler) Upload(c *gin.Context) {
 func (h *FileHandler) Download(c *gin.Context) {
 	ctx := c.Request.Context()
 
+	// bind params & validate
 	var params DownloadParams
 
 	if err := c.ShouldBindUri(&params); err != nil {
@@ -79,6 +80,7 @@ func (h *FileHandler) Download(c *gin.Context) {
 		return
 	}
 
+	// execute the service
 	var (
 		filename = params.FileName
 		filepath string
@@ -99,6 +101,7 @@ func (h *FileHandler) Download(c *gin.Context) {
 
 	defer func() { go h.removeFile(ctx, filepath) }()
 
+	// return the response
 	c.File(filepath)
 }
 
