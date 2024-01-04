@@ -14,8 +14,9 @@ type Configuration struct {
 	} `yaml:"minio"`
 
 	App struct {
-		ChunkSize  uint64 `yaml:"chunkSize"`
-		BucketName string `yaml:"bucketName"`
+		ChunkSize     uint64 `yaml:"chunkSize"`
+		UploadInChunk bool   `yaml:"uploadInChunk"`
+		BucketName    string `yaml:"bucketName"`
 	} `yaml:"app"`
 }
 

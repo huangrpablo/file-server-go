@@ -10,20 +10,22 @@ import (
 	"io"
 )
 
-func NewFileStore(chunkSize uint64, bucketName string) storage.FileStore {
+func NewFileStore(chunkSize uint64, uploadInChunk bool, bucketName string) storage.FileStore {
 	return &FileStore{
-		chunkSize:  chunkSize,
-		bucketName: bucketName,
+		chunkSize:     chunkSize,
+		uploadInChunk: uploadInChunk,
+		bucketName:    bucketName,
 	}
 }
 
 type FileStore struct {
-	chunkSize  uint64 // configured to upload files in chunks
-	bucketName string
+	chunkSize     uint64 // configured to upload files in chunks
+	uploadInChunk bool
+	bucketName    string
 }
 
 func (s *FileStore) Upload(ctx context.Context, filename string, file []byte) error {
-	options := minio.PutObjectOptions{PartSize: s.chunkSize}
+	options := minio.PutObjectOptions{PartSize: s.chunkSize, DisableMultipart: !s.uploadInChunk}
 
 	_, err := client.PutObject(ctx, s.bucketName, filename, bytes.NewReader(file), -1, options)
 

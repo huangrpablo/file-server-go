@@ -5,4 +5,5 @@ minio:
 
 app:
   chunkSize: 5242880 # apparently 1MB is not possible. minimum 5MB
+  uploadInChunk: false
   bucketName: "taurus-file-store"

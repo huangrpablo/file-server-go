@@ -38,7 +38,7 @@ func initCrypto() types.Crypto {
 }
 
 func initHandler(conf *config.Configuration, crypto types.Crypto) *handler.FileHandler {
-	store := minio.NewFileStore(conf.App.ChunkSize, conf.App.BucketName)
+	store := minio.NewFileStore(conf.App.ChunkSize, conf.App.UploadInChunk, conf.App.BucketName)
 
 	return handler.New(store, crypto)
 }
