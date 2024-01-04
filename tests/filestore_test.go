@@ -21,8 +21,8 @@ func init() {
 	}
 }
 
-func Test_Upload_And_Download(t *testing.T) {
-	store := minio.NewFileStore(5242880, "taurus-file-store")
+func Test_FileStore_Upload_And_Download(t *testing.T) {
+	store := minio.NewFileStore(5242880, false, "taurus-file-store")
 
 	ctx := context.Background()
 
@@ -38,11 +38,11 @@ func Test_Upload_And_Download(t *testing.T) {
 	require.Equal(t, file, archive)
 }
 
-func Test_Upload_And_Download_With_Crypto(t *testing.T) {
+func Test_FileStore_Upload_And_Download_With_Crypto(t *testing.T) {
 	aes, err := types.NewAES()
 	require.NoError(t, err)
 
-	store := minio.NewFileStore(5242880, "taurus-file-store")
+	store := minio.NewFileStore(5242880, false, "taurus-file-store")
 
 	ctx := context.Background()
 

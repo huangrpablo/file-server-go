@@ -17,6 +17,6 @@ func Test_AES(t *testing.T) {
 
 	decrypted, err := aes.Decrypt(encrypted)
 	require.NoError(t, err)
-	
+
 	require.Equal(t, msg, decrypted)
 }
