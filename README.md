@@ -73,6 +73,7 @@ The configuration can be made in `config/config.yaml`.
 
 3. Input validation done by gin binding
 4. Simple AES encryption (can be improved by using more custom and complex encryption strategy).
+5. The implementation of AES is taken from [Secret Key Encryption](https://dev.to/breda/secret-key-encryption-with-go-using-aes-316d).
 
 ## TODO
 - [ ] Build the file server app into a docker image
