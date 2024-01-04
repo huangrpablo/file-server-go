@@ -9,39 +9,65 @@ import (
 	"log/slog"
 )
 
-func main() {
+func initConfig() *config.Configuration {
 	conf, err := config.Load()
 
 	if err != nil {
 		panic(err)
 	}
 
-	slog.Info("init config successfully")
+	return conf
+}
 
-	store, err := minio.New(conf.Minio.Endpoint, conf.Minio.AccessKey, conf.Minio.SecretKey, conf.App.ChunkSize)
+func initMinio(conf *config.Configuration) {
+	err := minio.Init(conf.Minio.Endpoint, conf.Minio.AccessKey, conf.Minio.SecretKey)
 
 	if err != nil {
 		panic(err)
 	}
+}
 
-	slog.Info("init minio successfully")
-
+func initCrypto() types.Crypto {
 	crypto, err := types.NewAES()
 
 	if err != nil {
 		panic(err)
 	}
 
+	return crypto
+}
+
+func initHandler(conf *config.Configuration, crypto types.Crypto) *handler.FileHandler {
+	store := minio.NewFileStore(conf.App.ChunkSize, conf.App.BucketName)
+
+	return handler.New(store, crypto)
+}
+
+func main() {
+	conf := initConfig()
+
+	slog.Info("init config successfully")
+
+	initMinio(conf)
+
+	slog.Info("init minio successfully")
+
+	crypto := initCrypto()
+
 	slog.Info("init crypto artifacts successfully")
 
-	fileHandler := handler.New(store, crypto, conf.App.BucketName)
+	fileHandler := initHandler(conf, crypto)
+
+	slog.Info("init handler successfully")
 
 	r := gin.Default()
-	fileHandler.Register(r)
+	v1 := r.Group("/v1")
+
+	fileHandler.Register(v1)
 
 	slog.Info("register routing successfully")
 
-	slog.Info("service is up")
+	slog.Info("the service is up")
 
 	r.Run(":8080")
 }

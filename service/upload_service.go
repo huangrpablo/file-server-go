@@ -1,7 +1,7 @@
 package service
 
 import (
-	"bytes"
+	"context"
 	"fmt"
 	"github.com/file-server-go/storage"
 	"github.com/file-server-go/types"
@@ -9,21 +9,18 @@ import (
 )
 
 type UploadService struct {
-	store  storage.Store
+	store  storage.FileStore
 	crypto types.Crypto
-
-	bucketName string
 }
 
-func NewUploadService(store storage.Store, crypto types.Crypto, bucketName string) *UploadService {
+func NewUploadService(store storage.FileStore, crypto types.Crypto) *UploadService {
 	return &UploadService{
-		store:      store,
-		crypto:     crypto,
-		bucketName: bucketName,
+		store:  store,
+		crypto: crypto,
 	}
 }
 
-func (s *UploadService) Upload(filename string, filepath string) error {
+func (s *UploadService) Execute(ctx context.Context, filename string, filepath string) error {
 	content, err := os.ReadFile(filepath)
 
 	if err != nil {
@@ -36,7 +33,7 @@ func (s *UploadService) Upload(filename string, filepath string) error {
 		return fmt.Errorf("failed to encrypt the file: %w", err)
 	}
 
-	err = s.store.Put(s.bucketName, filename, bytes.NewReader(encrypted))
+	err = s.store.Upload(ctx, filename, encrypted)
 
 	if err != nil {
 		return fmt.Errorf("failed to put the file to bucket: %w", err)

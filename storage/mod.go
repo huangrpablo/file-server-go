@@ -1,8 +1,10 @@
 package storage
 
-import "io"
+import (
+	"context"
+)
 
-type Store interface {
-	Put(bucket, key string, file io.Reader) error
-	Get(bucket, key string) (io.Reader, error)
+type FileStore interface {
+	Upload(ctx context.Context, filename string, file []byte) error
+	Download(ctx context.Context, filename string) ([]byte, error)
 }
