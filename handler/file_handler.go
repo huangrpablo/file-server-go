@@ -7,6 +7,7 @@ import (
 	"github.com/file-server-go/storage"
 	"github.com/file-server-go/types"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"log/slog"
 	"os"
 )
@@ -44,7 +45,9 @@ func (h *FileHandler) Upload(c *gin.Context) {
 	}
 
 	filename := params.File.Filename
-	filepath := "uploaded/" + filename
+	
+	// to avoid conflicts from concurrent requests
+	filepath := "uploaded/" + filename + uuid.New().String()
 
 	if err := c.SaveUploadedFile(params.File, filepath); err != nil {
 		slog.ErrorContext(ctx, "Save file", "err", err)

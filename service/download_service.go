@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/file-server-go/storage"
 	"github.com/file-server-go/types"
+	"github.com/google/uuid"
 	"os"
 )
 
@@ -33,7 +34,9 @@ func (s *DownloadService) Execute(ctx context.Context, filename string) (filepat
 		return "", fmt.Errorf("failed to decrpyt the file: %w", err)
 	}
 
-	filepath = "downloaded/" + filename
+	// to avoid conflicts from concurrent requests
+	filepath = "downloaded/" + filename + uuid.New().String()
+
 	file, err := os.Create(filepath)
 
 	if err != nil {
