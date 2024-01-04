@@ -27,7 +27,7 @@ type FileStore struct {
 func (s *FileStore) Upload(ctx context.Context, filename string, file []byte) error {
 	options := minio.PutObjectOptions{PartSize: s.chunkSize, DisableMultipart: !s.uploadInChunk}
 
-	_, err := client.PutObject(ctx, s.bucketName, filename, bytes.NewReader(file), -1, options)
+	_, err := client.PutObject(ctx, s.bucketName, filename, bytes.NewReader(file), int64(len(file)), options)
 
 	if err != nil {
 		return fmt.Errorf("failed to put object(%v) in bucket(%v): %w", filename, s.bucketName, err)
