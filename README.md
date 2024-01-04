@@ -5,7 +5,7 @@ An application that exposes an API accepting and serving files.
 
 ### Prerequisites
 
-- Go installed on your machine
+- Go installed on your machine (v1.21)
 - Docker and Docker Compose for running Minio locally
 
 ### Installation
