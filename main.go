@@ -10,7 +10,7 @@ import (
 )
 
 func initConfig() *config.Configuration {
-	conf, err := config.Load()
+	conf, err := config.Load("config/config.yaml")
 
 	if err != nil {
 		panic(err)

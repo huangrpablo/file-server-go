@@ -19,8 +19,10 @@ type Configuration struct {
 	} `yaml:"app"`
 }
 
-func Load() (*Configuration, error) {
-	rawConf, err := os.ReadFile("config/config.yaml")
+func Load(path string) (*Configuration, error) {
+	//rawConf, err := os.ReadFile("config/config.yaml")
+
+	rawConf, err := os.ReadFile(path)
 
 	if err != nil {
 		return nil, fmt.Errorf("fail to read config file: %w", err)
