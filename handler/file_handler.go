@@ -38,7 +38,7 @@ func (h *FileHandler) Upload(c *gin.Context) {
 	var params UploadParams
 
 	if err := c.ShouldBind(&params); err != nil {
-		slog.ErrorContext(ctx, "Get file: %+v", err)
+		slog.ErrorContext(ctx, "Get file", "err", err)
 		BadRequest(c, "No file provided")
 		return
 	}
@@ -47,7 +47,7 @@ func (h *FileHandler) Upload(c *gin.Context) {
 	filepath := "uploaded/" + filename
 
 	if err := c.SaveUploadedFile(params.File, filepath); err != nil {
-		slog.ErrorContext(ctx, "Save file: %+v", err)
+		slog.ErrorContext(ctx, "Save file", "err", err)
 		InternalServerError(c, "Fail to open the uploaded file")
 		return
 	}
@@ -56,7 +56,7 @@ func (h *FileHandler) Upload(c *gin.Context) {
 
 	// execute the service
 	if err := h.upload.Execute(ctx, filename, filepath); err != nil {
-		slog.ErrorContext(ctx, "Upload file: %+v", err)
+		slog.ErrorContext(ctx, "Upload file", "err", err)
 		InternalServerError(c, "Fail to store the uploaded file")
 		return
 	}
@@ -71,7 +71,7 @@ func (h *FileHandler) Download(c *gin.Context) {
 	var params DownloadParams
 
 	if err := c.ShouldBindUri(&params); err != nil {
-		slog.ErrorContext(ctx, "Get filename: %+v", err)
+		slog.ErrorContext(ctx, "Get filename", "err", err)
 		BadRequest(c, "No filename provided")
 		return
 	}
@@ -84,12 +84,12 @@ func (h *FileHandler) Download(c *gin.Context) {
 
 	if filepath, err = h.download.Execute(ctx, filename); err != nil {
 		if errors.Is(err, types.ErrFileNotFound) {
-			slog.ErrorContext(ctx, "Retrieve file: %+v", err)
+			slog.ErrorContext(ctx, "Retrieve file", "err", err)
 			NotFound(c, "Fail to find the requested file")
 			return
 		}
 
-		slog.ErrorContext(ctx, "Retrieve file: %+v", err)
+		slog.ErrorContext(ctx, "Retrieve file", "err", err)
 		InternalServerError(c, "Fail to download the requested file")
 		return
 	}
@@ -103,6 +103,6 @@ func (h *FileHandler) removeFile(ctx context.Context, filepath string) {
 	err := os.RemoveAll(filepath)
 
 	if err != nil {
-		slog.WarnContext(ctx, "Fail to delete the file[%v] on the server: %+v", filepath, err)
+		slog.WarnContext(ctx, "Fail to delete the file from the server", "file", filepath, "err", err)
 	}
 }
