@@ -47,7 +47,7 @@ func (h *FileHandler) Upload(c *gin.Context) {
 	filename := params.File.Filename
 
 	// to avoid conflicts from concurrent requests
-	filepath := "uploaded/" + filename + uuid.New().String()
+	filepath := "cached/" + filename + uuid.New().String()
 
 	if err := c.SaveUploadedFile(params.File, filepath); err != nil {
 		slog.ErrorContext(ctx, "Save file", "err", err)

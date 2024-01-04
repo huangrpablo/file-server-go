@@ -4,5 +4,5 @@ minio:
   secretKey: minioadmin
 
 app:
-  chunkSize: 5242880
+  chunkSize: 5242880 # apparently 1MB is not possible. minimum 5MB
   bucketName: "taurus-file-store"

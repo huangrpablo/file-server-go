@@ -40,7 +40,7 @@ func (s *DownloadService) Execute(ctx context.Context, filename string) (path st
 
 func (s *DownloadService) saveFile(filename string, content []byte) (path string, err error) {
 	// to avoid conflicts from concurrent requests
-	path = "downloaded/" + filename + uuid.New().String()
+	path = "cached/" + filename + uuid.New().String()
 
 	err = os.MkdirAll(filepath.Dir(path), 0750)
 
