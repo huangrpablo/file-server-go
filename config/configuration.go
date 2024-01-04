@@ -7,6 +7,7 @@ import (
 )
 
 type Configuration struct {
+	// Minio credentials
 	Minio struct {
 		Endpoint  string `yaml:"endpoint"`
 		AccessKey string `yaml:"accessKey"`
@@ -14,9 +15,12 @@ type Configuration struct {
 	} `yaml:"minio"`
 
 	App struct {
-		ChunkSize     uint64 `yaml:"chunkSize"`
-		UploadInChunk bool   `yaml:"uploadInChunk"`
-		BucketName    string `yaml:"bucketName"`
+		// the size of a chunk if multipart upload is enabled
+		ChunkSize uint64 `yaml:"chunkSize"`
+		// whether a file will be uploaded to minio in parts
+		UploadInChunk bool `yaml:"uploadInChunk"`
+		// the bucket where files are stored
+		BucketName string `yaml:"bucketName"`
 	} `yaml:"app"`
 }
 

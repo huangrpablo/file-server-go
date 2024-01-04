@@ -12,6 +12,7 @@ import (
 	"os"
 )
 
+// Register routers and their handleFuncs
 func (h *FileHandler) Register(r *gin.RouterGroup) {
 	r.POST("/files", h.Upload)
 	r.GET("/file/:filename", h.Download)
