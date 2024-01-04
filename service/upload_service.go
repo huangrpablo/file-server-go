@@ -1,7 +1,6 @@
 package service
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"github.com/file-server-go/storage"
@@ -32,16 +31,6 @@ func (s *UploadService) Execute(ctx context.Context, filename string, filepath s
 
 	if err != nil {
 		return fmt.Errorf("failed to encrypt the file: %w", err)
-	}
-
-	decrypted, err := s.crypto.Decrypt(encrypted)
-
-	if err != nil {
-		return fmt.Errorf("failed to decrypt the file: %w", err)
-	}
-
-	if !bytes.Equal(encrypted, decrypted) {
-		return fmt.Errorf("encryption failed")
 	}
 
 	err = s.store.Upload(ctx, filename, encrypted)
