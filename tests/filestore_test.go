@@ -34,5 +34,5 @@ func Test_Upload_And_Download(t *testing.T) {
 	archive, err := store.Download(ctx, filename)
 	require.NoError(t, err)
 
-	require.Equal(t, filename, archive)
+	require.Equal(t, file, archive)
 }
